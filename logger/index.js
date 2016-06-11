@@ -1,13 +1,13 @@
 var chalk = require('chalk');
 
 module.exports = {
-    debug: writeDebug,
+    log: writeLog,
     info: writeInfo,
     error: writeError,
     warn: writeWarn
 };
 
-function writeDebug() {
+function writeLog() {
     if(program.verbose) console.log.apply(this, arguments);
 }
 

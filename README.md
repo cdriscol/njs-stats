@@ -4,7 +4,7 @@ Gather NodeJS project statistics over time using git history.
 
 ##Using njs-stats
 ```bash
-$ njs-stats -v
+$ njs-stats --help
 ```
 
 ##Developing
