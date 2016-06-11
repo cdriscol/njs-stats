@@ -14,7 +14,7 @@ function findAllFilesQ() {
             cwd: program.directory
         }, function (err, files) {
             if(err) return reject(err);
-            logger.info('Finished globbing files, found ' + files.length + ' files');
+            logger.info('finished globbing files, found', files.length, 'files');
             logger.log(files);
             resolve(files);
         });
@@ -23,11 +23,19 @@ function findAllFilesQ() {
 
 function getIgnoreGlob() {
     var gitIgnorePath = path.join(program.directory, '.gitignore');
-    logger.log('using .gitignore from ' + gitIgnorePath);
+    logger.log('using .gitignore from', gitIgnorePath);
     var glob = gitIgnoreToGlob(gitIgnorePath);
-    // removes "!" off globs, because glob's ignore option adds the "!" to the array items (me thinks)
     glob = glob.map(function (item) {
+        // removes "!" off globs, because glob's ignore option adds the "!" to the array items (me thinks)
         return item.substr(1);
     });
+
+    if(!program.ignore) return glob;
+    
+    logger.log('processing ignore argument', program.ignore);
+    program.ignore.split(',').forEach(function (dirName) {
+       glob.push('**/' + dirName + '\r/**');
+    });
+    
     return glob;
 }
