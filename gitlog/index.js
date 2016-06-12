@@ -77,7 +77,7 @@ function parseLog(entry) {
     var sha = '';
     entry
         .split('\n')
-        .forEach(function (line) {
+        .forEach(line => {
             if (line.indexOf('Date:') === 0) {
                 date = line.replace('Date:  ', '')
             }

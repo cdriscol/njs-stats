@@ -33,7 +33,7 @@ function getIgnoreGlob() {
     if(!program.ignore) return glob;
     
     logger.log('processing ignore argument', program.ignore);
-    program.ignore.split(',').forEach(function (dirName) {
+    program.ignore.split(',').forEach(dirName => {
        glob.push('**/' + dirName + '\r/**');
     });
     

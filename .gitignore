@@ -5,6 +5,7 @@ logs
 *.log
 npm-debug.log*
 .idea
+njs-stats-output.csv
 
 # Runtime data
 pids

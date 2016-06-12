@@ -22,7 +22,8 @@
     "commander": "^2.9.0",
     "gitignore-to-glob": "^0.2.1",
     "gitlog": "^2.1.2",
-    "glob": "^7.0.3"
+    "glob": "^7.0.3",
+    "json2csv": "^3.4.2"
   },
   "bin": {
     "njs-stats": "./njs-stats.js"
