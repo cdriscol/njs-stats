@@ -10,12 +10,7 @@ function writeToCsvQ(data) {
     var outputPath = path.resolve(program.output);
     logger.info('writing CSV output to ', outputPath);
     return new Promise(function (resolve, reject) {
-        var fields = [
-            'commit.sha',
-            'commit.date',
-            'path'
-        ];
-        json2csv({ data: data, fields: fields }, function(err, csv) {
+        json2csv({ data: data, flatten: true }, function(err, csv) {
             if (err) return reject(err);
             fs.writeFile(outputPath, csv, function(err) {
                 if (err) return reject(err);
