@@ -1,4 +1,5 @@
 var calcLocDataQ = require('./calcLocData');
+var countRequiresQ = require('./countRequires');
 var fs = Q.promisifyAll(require('fs'), {suffix: 'Q'});
 var path = require('path');
 
@@ -23,6 +24,13 @@ function collectStatsQ(files) {
                         stat.loc = locData;
                         return code;
                     });
+            })
+            .then(function (code) {
+                return countRequiresQ(code)
+                    .then(function (requireCount) {
+                        stat.requireCount = requireCount;
+                        return code;
+                    })
             });
 
         statQs.push(fileStatQ);
