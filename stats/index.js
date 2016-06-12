@@ -1,5 +1,3 @@
-var calcLocDataQ = require('./calcLocData');
-var countRequiresQ = require('./countRequires');
 var fs = Q.promisifyAll(require('fs'), {suffix: 'Q'});
 var path = require('path');
 
@@ -19,6 +17,7 @@ function collectStatsQ(files) {
         var fileStatQ = fs
             .readFileQ(stat.fullPath, 'utf8')
             .then(function (code) {
+                var calcLocDataQ = require('./calcLocData');
                 return calcLocDataQ(code)
                     .then(function (locData) {
                         stat.loc = locData;
@@ -26,11 +25,20 @@ function collectStatsQ(files) {
                     });
             })
             .then(function (code) {
+                var countRequiresQ = require('./countRequires');
                 return countRequiresQ(code)
                     .then(function (requireCount) {
                         stat.requireCount = requireCount;
                         return code;
-                    })
+                    });
+            })
+            .then(function (code) {
+                var countExpectsQ = require('./countExpects');
+                return countExpectsQ(code)
+                    .then(function (expectCount) {
+                        stat.expectCount = expectCount;
+                        return code;
+                    });
             });
 
         statQs.push(fileStatQ);
