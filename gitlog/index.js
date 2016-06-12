@@ -15,13 +15,15 @@ function getHistory() {
     if (program.gitlog === 'weekly') {
         var currentDate = now.getDate();
         var weekDate = new Date(currentYear, currentMonth, currentDate);
+        weekDate.setDate(weekDate.getDate() + 7); // to get latest commit added
         //walk back 52 weeks
         for (var w = 0; w < 52; w++) {
             datesToCheck.push(formatDate(weekDate));
-            weekDate.setMonth(weekDate.getDate() - 7);
+            weekDate.setDate(weekDate.getDate() - 7);
         }
     } else {
         var monthDate = new Date(currentYear, currentMonth);
+        monthDate.setMonth(monthDate.getMonth() + 1); // to get latest commit added
         // go back 12 months
         for (var m = 0; m < 12; m++) {
             datesToCheck.push(formatDate(monthDate));

@@ -8,7 +8,7 @@ program
     .usage('[options] [directory]')
     .option('-g, --gitlog [interval]', 'walk back through gitlog at specified interval (weekly or monthly)', /^(monthly|weekly)$/i)
     .option('-v, --verbose', 'verbose output')
-    .option('-o, --output [name]', 'path/name for the csv output file', 'njs-stats-output.csv')
+    .option('-o, --output [name]', 'path/name for the csv output file')
     .option('-b, --branch [name]', 'git branch to use for history', 'master')
     .option('-i, --ignore [dirs]', 'additional directory names to ignore (not quoted, comma-separated)')
     .option('[directory]', 'directory to scan, defaults to current directory');
@@ -22,6 +22,8 @@ program.on('--help', function () {
 
 program.parse(process.argv);
 
+if(program.output === true) program.output = 'njs-stats-output.csv';
+
 program.directory = program.args.length ? program.args[0] : __dirname;
 
 logger.info('Starting njs-stats in directory', program.directory);
@@ -34,6 +36,7 @@ var getStatsQ = program.gitlog ? collectStatsWithHistoryQ() : collectStatsQ();
 
 getStatsQ
     .then(function (data) {
+        if(!program.output) return;
         var output = require('./output');
         return output.writeToCsvQ(data);
     })
