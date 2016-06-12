@@ -52,19 +52,23 @@ function collectStatsWithHistoryQ() {
     return gitlog
         .getHistoryQ()
         .then(function (commits) {
-            var commitsQ = [];
-            commits.forEach(function (commit) {
-                // todo: first promise step should check out code
-                logger.info('checking out code from', commit.sha, '(', commit.date, ')');
-
-                commitsQ.push(collectStatsQ());
-            });
-
+            var csvData = [];
             return Q
-                .reduce(commitsQ, function (oldCsv, newData) {
+                .each(commits, function (commit) {
+                    return gitlog
+                        .checkoutShaQ(commit)
+                        .then(function () {
+                            return collectStatsQ();
+                        })
+                        .then(function (statData) {
+                            csvData = csvData.concat(statData);
+                            return csvData;
+                        });
+                })
+                .then(function () {
                     // todo: build up CSV output
-                    logger.log('newData', newData);
-                    return oldCsv;
-                }, []);
+                    logger.log('newData', csvData);
+                    return csvData;
+                });
         });
 }

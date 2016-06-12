@@ -2,7 +2,8 @@ var path = require('path');
 var exec = require('child_process').exec;
 
 module.exports = {
-    getHistoryQ: getHistory
+    getHistoryQ: getHistory,
+    checkoutShaQ: checkoutShaQ
 };
 
 function getHistory() {
@@ -14,15 +15,15 @@ function getHistory() {
     if (program.gitlog === 'weekly') {
         var currentDate = now.getDate();
         var weekDate = new Date(currentYear, currentMonth, currentDate);
-        //walk back 104 weeks
-        for (var w = 0; w < 104; w++) {
+        //walk back 52 weeks
+        for (var w = 0; w < 52; w++) {
             datesToCheck.push(formatDate(weekDate));
             weekDate.setMonth(weekDate.getDate() - 7);
         }
     } else {
         var monthDate = new Date(currentYear, currentMonth);
-        // go back 24 months
-        for (var m = 0; m < 24; m++) {
+        // go back 12 months
+        for (var m = 0; m < 12; m++) {
             datesToCheck.push(formatDate(monthDate));
             monthDate.setMonth(monthDate.getMonth() - 1);
         }
@@ -33,7 +34,7 @@ function getHistory() {
             var command = 'git rev-list -n 1 --before="' + formattedDate + '" --pretty ' + program.branch;
             logger.log('running', command);
 
-            exec(command, {cwd: program.directory}, function (err, stdout, stderr) {
+            exec(command, {cwd: program.directory}, function (err, stdout) {
                 if (err) return reject(err);
                 if (!stdout) return resolve([]);
 
@@ -52,6 +53,23 @@ function getHistory() {
             // TODO: sort this chronologically?
             return shas;
         });
+}
+
+function checkoutShaQ(commit) {
+    return new Promise(function (resolve, reject) {
+        var command = 'git checkout ' + commit.sha + ' && git clean -fd';
+        logger.info('checking out code from', commit.sha, '(', commit.date, ')');
+        logger.log('running', command);
+
+        exec(command, {cwd: program.directory}, function (err, stdout, stderr) {
+            if (err) return reject(err);
+            if (stdout.indexOf('error:') === 0) return reject(stdout);
+            if(stderr) logger.warn(stderr);
+            
+            logger.info('checked out', commit.sha);
+            resolve(commit);
+        });
+    });
 }
 
 function parseLog(entry) {

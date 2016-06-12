@@ -20,5 +20,5 @@ function writeError() {
 }
 
 function writeInfo() {
-    console.warn.apply(this, arguments);
+    console.info.apply(this, arguments);
 }
