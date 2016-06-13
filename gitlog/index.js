@@ -11,11 +11,10 @@ function getHistory() {
     var now = new Date();
     var currentYear = now.getFullYear();
     var currentMonth = now.getMonth();
-    var datesToCheck = [];
+    var datesToCheck = ['today'];
     if (program.gitlog === 'weekly') {
         var currentDate = now.getDate();
         var weekDate = new Date(currentYear, currentMonth, currentDate);
-        weekDate.setDate(weekDate.getDate() + 7); // to get latest commit added
         //walk back 52 weeks
         for (var w = 0; w < 52; w++) {
             datesToCheck.push(formatDate(weekDate));
@@ -23,7 +22,6 @@ function getHistory() {
         }
     } else {
         var monthDate = new Date(currentYear, currentMonth);
-        monthDate.setMonth(monthDate.getMonth() + 1); // to get latest commit added
         // go back 12 months
         for (var m = 0; m < 12; m++) {
             datesToCheck.push(formatDate(monthDate));
@@ -32,11 +30,11 @@ function getHistory() {
     }
 
     var datesToCheckQs = datesToCheck.map(function (formattedDate) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             var command = 'git rev-list -n 1 --before="' + formattedDate + '" --pretty ' + program.branch;
             logger.log('running', command);
 
-            exec(command, {cwd: program.directory}, function (err, stdout) {
+            exec(command, {cwd: program.directory}, (err, stdout) => {
                 if (err) return reject(err);
                 if (!stdout) return resolve([]);
 
@@ -48,11 +46,10 @@ function getHistory() {
     });
 
     return Q
-        .reduce(datesToCheckQs, function (prev, curr) {
+        .reduce(datesToCheckQs, (prev, curr) => {
             return prev.concat(curr);
         }, [])
-        .then(function (shas) {
-            // TODO: sort this chronologically?
+        .then(shas => {
             return shas;
         });
 }
