@@ -5,8 +5,12 @@ Gather NodeJS project statistics over time using git history.
 Stats collected (per file) include:
 * LOC data (comments, source, empty, etc)
 * Count of requires
+* Count of jasmine expects
+* Count of expects
+
+To-do:
 * Count of exported functions/objects
-* Count of jasmine expects (not xit'd or xdescribe'd) 
+* Ignore expects in xdescribe/xit's
 
 ##Using njs-stats
 ```bash
