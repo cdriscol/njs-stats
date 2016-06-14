@@ -10,6 +10,8 @@ program
     .option('-v, --verbose', 'verbose output')
     .option('-o, --output [name]', 'path/name for the csv output file')
     .option('-b, --branch [name]', 'git branch to use for history', 'master')
+    .option('-p, --spec-pattern [pattern]', 'sets isSpec to true if file name contains pattern (default is "spec.js")', 'spec.js')
+    .option('-d, --spec-directories [dirs]', 'sets isSpec to true if path contains directory name (not quoted, comma-separated)')
     .option('-i, --ignore [dirs]', 'additional directory names to ignore (not quoted, comma-separated)')
     .option('[directory]', 'directory to scan, defaults to current directory');
 

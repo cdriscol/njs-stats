@@ -17,6 +17,14 @@ function collectStatsQ(files) {
         var fileStatQ = fs
             .readFileQ(stat.fullPath, 'utf8')
             .then(function (code) {
+              var countSpecQ = require('./countSpecs');
+              return countSpecQ(stat.path)
+                .then(function (specCount) {
+                  stat.isSpec = specCount;
+                  return code;
+                });
+            })
+            .then(function (code) {
                 var calcLocDataQ = require('./calcLocData');
                 return calcLocDataQ(code)
                     .then(function (locData) {
