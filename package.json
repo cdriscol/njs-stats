@@ -1,6 +1,6 @@
 {
   "name": "njs-stats",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gather NodeJS project statistics over time using git history.",
   "main": "njs-stats.js",
   "scripts": {
